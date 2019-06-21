@@ -140,6 +140,22 @@ class Usuario{
 		));
 	}
 
+	//Método DELETE
+	public function delete(){
+		$sql = new Sql();
+
+		$sql->query("DELETE FROM tb_usuarios WHERE idusuario = :ID", array(
+			':ID' => $this->getIdusuario()
+		));
+
+		//Limpando os dados do objeto já que ele não existe mais no BD
+		$this->setIdusuario(0);
+		$this->setDeslogin("");
+		$this->setDessenha("");
+		$this->setDtcadastro(new DateTime());
+
+	}
+
 	//Método para trazer as informações do banco em String usando o método mágico __toString()	
 	public function __toString(){
 		return json_encode(array(

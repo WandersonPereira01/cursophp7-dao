@@ -6,7 +6,9 @@ class Sql extends PDO{
 
 	//Criando a conexão com o Banco de Dados
 	public function __construct(){
-		$this->conn = new PDO("sqlsrv:Database=hcode; server=localhost\SQL2017;ConnectionPooling=0", "sa","root");
+		//Mudei de SQLServer para MySQL pq o Management está com problemas
+		//$this->conn = new PDO("sqlsrv:Database=hcode; server=localhost\SQL2017;ConnectionPooling=0", "sa","root");
+		$this->conn = new PDO("mysql:dbname=dbphp7;host=localhost","root","");
 	}
 
 	//Método para receber os dados para fazer o bindParam

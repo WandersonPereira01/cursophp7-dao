@@ -50,14 +50,8 @@ class Usuario{
 
 		//Verificando se a consulta retornou dados
 		if (count($results) > 0){
-			//variável que recebe o valor de $results na posição ZERO
-			$row = $results[0];
-
-			//pegando os dados que voltaram associativos e mandando para os setters
-			$this->setIdusuario($row['idusuario']);
-			$this->setDeslogin($row['deslogin']);
-			$this->setDessenha($row['dessenha']);
-			$this->setDtcadastro(new DateTime($row['dtcadastro']));
+			//chamando o método setDados()
+			$this->setDados($results[0]);
 		}
 
 	}
@@ -90,19 +84,60 @@ class Usuario{
 
 		//Verificando se a consulta retornou dados
 		if (count($results) > 0){
-			//variável que recebe o valor de $results na posição ZERO
-			$row = $results[0];
-
-			//pegando os dados que voltaram associativos e mandando para os setters
-			$this->setIdusuario($row['idusuario']);
-			$this->setDeslogin($row['deslogin']);
-			$this->setDessenha($row['dessenha']);
-			$this->setDtcadastro(new DateTime($row['dtcadastro']));
+			//chamando o método setDados()
+			$this->setDados($results[0]);
+			
 		} else {
 			throw new Exception("Login e/ou senha inválidos.");
 			
 		}
 
+	}
+
+	//Método para setar os dados trazidos do BD (estava sendo repetido em vários métodos)
+	public function setDados($dados){
+
+		//pegando os dados que voltaram associativos e mandando para os setters
+		$this->setIdusuario($dados['idusuario']);
+		$this->setDeslogin($dados['deslogin']);
+		$this->setDessenha($dados['dessenha']);
+		$this->setDtcadastro(new DateTime($dados['dtcadastro']));
+	}
+
+	//Método construtor para o INSERT
+	public function __construct($login="", $senha=""){
+		$this->setDeslogin($login);
+		$this->setDessenha($senha);
+	}
+	//Método INSERT
+	public function insert(){
+		$sql = new Sql();
+
+		//fazendo o insert com select para mostrar o ID que foi gerado
+		$results = $sql->select("CALL sp_usuarios_insert(:LOGIN, :SENHA)", array(
+			':LOGIN' => $this->getDeslogin(),
+			':SENHA' => $this->getDessenha()
+		));
+
+		if (count($results) > 0){
+			
+			$this->setDados($results[0]);
+		}
+	}
+
+	//Método UPDATE
+	public function update($login, $senha){
+		//setando os valores recebidos como parâmetros para facilitar o método
+		$this->setDeslogin($login);
+		$this->setDessenha($senha);
+
+		$sql = new Sql();
+
+		$sql->query("UPDATE tb_usuarios SET deslogin = :LOGIN, dessenha = :SENHA WHERE idusuario = :ID", array(
+			':LOGIN' => $this->getDeslogin(),
+			':SENHA' => $this->getDessenha(),
+			':ID' => $this->getIdusuario()
+		));
 	}
 
 	//Método para trazer as informações do banco em String usando o método mágico __toString()	

@@ -20,9 +20,27 @@ require_once("config.php");
 
 
 //carrega um usuário usando o login e a senha
+//$usuario = new Usuario();
+//$usuario->login("user", "1234");
+//echo $usuario;
+
+/*INSERT novo usuario
+$aluno = new Usuario();
+$aluno->setDeslogin("aluno");
+$aluno->setDessenha("!@#$");
+$aluno->insert();
+echo $aluno;
+*/
+
+/*INSERT usando o método construtor
+$aluno = new Usuario("João","$#@!");
+$aluno->insert();
+echo $aluno;
+*/
+
+//UPDATE
 $usuario = new Usuario();
-$usuario->login("Manolo", "qwert");
-
-echo $usuario;
-
+//Carregando o usuário para poder fazer o update
+$usuario->loadById(14);
+$usuario->update("professor", "1478582");
 
